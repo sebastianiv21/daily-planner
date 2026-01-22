@@ -28,7 +28,7 @@ export const userSettings = pgTable(
 	]
 );
 
-export const userSettingsRelations = relations(userSettings, ({ one, many }) => ({
+export const userSettingsRelations = relations(userSettings, ({ one }) => ({
 	user: one(user, {
 		fields: [userSettings.userId],
 		references: [user.id]

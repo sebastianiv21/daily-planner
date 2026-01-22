@@ -12,13 +12,13 @@
 				</div>
 				<h1 class="text-4xl font-bold text-base-content">Daily Planner</h1>
 			</div>
-			<p class="text-base-content/70 mb-8">
-				Calm is a choice. Focus on what matters.
-			</p>
-			<div class="flex gap-4 justify-center">
-				<a href="/login" class="btn btn-primary">Sign In</a>
-				<a href="/register" class="btn btn-outline">Create Account</a>
-			</div>
+		<p class="text-base-content/70 mb-8">
+			Calm is a choice. Focus on what matters.
+		</p>
+		<div class="flex gap-4 justify-center">
+			<button class="btn btn-primary" disabled>Sign In (Coming Soon)</button>
+			<button class="btn btn-outline" disabled>Create Account (Coming Soon)</button>
+		</div>
 		</div>
 	</div>
 </div>

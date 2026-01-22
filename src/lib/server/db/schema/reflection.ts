@@ -1,5 +1,5 @@
 import { relations } from 'drizzle-orm';
-import { pgTable, text, timestamp, index, date, boolean, jsonb } from 'drizzle-orm/pg-core';
+import { pgTable, text, timestamp, index, date, jsonb } from 'drizzle-orm/pg-core';
 import { user } from './auth';
 import { shutdownSession } from './shutdown-session';
 

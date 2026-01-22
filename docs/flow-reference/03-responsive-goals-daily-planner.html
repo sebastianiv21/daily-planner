@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Planner | Goals</title>
+    <meta name="view-transition" content="same-origin">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Satoshi:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --warm-beige: #E8DCC4;
+            --off-white: #FAFAF8;
+            --light-gray: #F0EDE7;
+            --medium-gray: #8B8680;
+            --charcoal: #2A2520;
+            --golden: #D4A574;
+            --soft-orange: #E8A76D;
+            --muted-green: #A4B494;
+        }
+
+        .serif {
+            font-family: 'Playfair Display', serif;
+        }
+
+        body {
+            font-family: 'Satoshi', sans-serif;
+            color: var(--charcoal);
+        }
+
+        /* View Transitions */
+        @view-transition {
+            navigation: auto;
+        }
+
+        ::view-transition-old(root), ::view-transition-new(root) {
+            animation-duration: 0.4s;
+            animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .task-checkbox {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 1.5px solid var(--medium-gray);
+            border-radius: 6px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+        .task-checkbox:checked {
+            background-color: var(--muted-green);
+            border-color: var(--muted-green);
+        }
+        .task-checkbox:checked::after {
+            content: '✓';
+            position: absolute;
+            color: white;
+            font-size: 12px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .goal-card:hover {
+            border-color: var(--golden);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px -10px rgba(42, 37, 32, 0.08);
+        }
+
+        /* Custom scrollbar for minimalism */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--off-white);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--light-gray);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen flex flex-col md:flex-row bg-[#FAFAF8]">
+        
+        <!-- Mobile Header -->
+        <header class="md:hidden flex items-center justify-between p-4 bg-[#FAFAF8] border-b border-[#F0EDE7] sticky top-0 z-50">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-[#D4A574] rounded-full flex items-center justify-center text-white">
+                    <iconify-icon icon="lucide:sun" class="text-lg"></iconify-icon>
+                </div>
+                <span class="text-lg font-bold tracking-tight">Sunsama</span>
+            </div>
+            <button id="mobile-menu-toggle" class="p-2 text-[#2A2520]">
+                <iconify-icon icon="lucide:menu" class="text-2xl"></iconify-icon>
+            </button>
+        </header>
+
+        <!-- Navigation Sidebar -->
+        <aside style="view-transition-name: sidebar-nav" class="hidden md:flex w-64 border-r border-[#F0EDE7] flex-col h-screen sticky top-0 bg-[#FAFAF8]">
+            <div class="p-8 flex items-center gap-3">
+                <div class="w-8 h-8 bg-[#D4A574] rounded-full flex items-center justify-center text-white">
+                    <iconify-icon icon="lucide:sun" class="text-xl"></iconify-icon>
+                </div>
+                <span class="text-xl font-bold tracking-tight font-['Satoshi']">Sunsama</span>
+            </div>
+
+            <nav class="flex-1 px-4 space-y-2">
+                <a id="nav-today" href="https://p.superdesign.dev/draft/52a3609b-c843-4858-80d3-097424e1377e" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-[#F0EDE7] transition-colors text-[#8B8680]">
+                    <iconify-icon icon="lucide:calendar-days" class="text-xl"></iconify-icon>
+                    <span>Today</span>
+                </a>
+                <a id="nav-goals" href="https://p.superdesign.dev/draft/a04d3bdb-3996-4b1c-b380-9e5d7382cb12" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-[#E8DCC4] text-[#2A2520] font-medium">
+                    <iconify-icon icon="lucide:target" class="text-xl"></iconify-icon>
+                    <span>Goals</span>
+                </a>
+                <a id="nav-habits" href="https://p.superdesign.dev/draft/c85ee824-a231-4854-933c-4ec0b1e712c2" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-[#F0EDE7] transition-colors text-[#8B8680]">
+                    <iconify-icon icon="lucide:repeat" class="text-xl"></iconify-icon>
+                    <span>Habits</span>
+                </a>
+                <a id="nav-backlog" href="https://p.superdesign.dev/draft/12ea1329-97a9-4781-ae7b-bc67a6a6f6d1" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-[#F0EDE7] transition-colors text-[#8B8680]">
+                    <iconify-icon icon="lucide:archive" class="text-xl"></iconify-icon>
+                    <span>Backlog</span>
+                </a>
+            </nav>
+
+            <div class="p-6 border-t border-[#F0EDE7] space-y-2">
+                <a id="nav-settings" href="#settings" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-[#F0EDE7] text-[#8B8680] text-sm">
+                    <iconify-icon icon="lucide:settings"></iconify-icon>
+                    <span>Settings</span>
+                </a>
+                <a id="nav-logout" href="#logout" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-red-50 text-red-400 text-sm">
+                    <iconify-icon icon="lucide:log-out"></iconify-icon>
+                    <span>Sign Out</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main style="view-transition-name: main-content" class="flex-1 px-4 sm:px-8 md:px-12 py-8 md:py-16 flex flex-col">
+            
+            <!-- Header -->
+            <header class="mb-8 md:mb-12 flex flex-col sm:flex-row justify-between items-start gap-6">
+                <div>
+                    <h1 class="serif text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight mb-2">Intentions</h1>
+                    <p class="text-[#8B8680] text-base md:text-lg">Long-term visions that guide your daily focus.</p>
+                </div>
+                <button id="add-goal-btn" class="w-full sm:w-auto bg-[#2A2520] text-white px-6 py-4 sm:py-3 rounded-xl font-medium flex items-center justify-center gap-2 hover:bg-black transition-all shadow-lg shadow-[#2A2520]/10 tap-target">
+                    <iconify-icon icon="lucide:plus"></iconify-icon>
+                    <span>New Goal</span>
+                </button>
+            </header>
+
+            <!-- Active Goals Grid -->
+            <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                
+                <!-- Goal Card 1 -->
+                <div class="goal-card flex flex-col bg-white border border-[#F0EDE7] p-6 sm:p-8 rounded-[2rem] transition-all">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="flex flex-col gap-1">
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-[#D4A574]">Professional</span>
+                            <h2 class="text-xl md:text-2xl font-medium leading-tight">Career Growth & Leadership</h2>
+                        </div>
+                        <div class="flex flex-col items-end min-w-[60px]">
+                            <span class="text-2xl md:text-3xl font-medium serif">65%</span>
+                            <span class="text-[10px] text-[#8B8680] whitespace-nowrap">13/20 Tasks</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Progress Bar (Vertical stacking refers to elements inside card) -->
+                    <div class="w-full h-2 bg-[#F0EDE7] rounded-full overflow-hidden mb-8">
+                        <div class="h-full bg-[#A4B494] transition-all duration-1000" style="width: 65%"></div>
+                    </div>
+
+                    <!-- Linked Tasks -->
+                    <div class="space-y-4 mt-auto">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-[10px] font-bold uppercase tracking-widest text-[#8B8680]">Active Tasks</h3>
+                            <a id="view-all-career" href="https://p.superdesign.dev/draft/7049459f-330e-4208-90bc-ab6bd1fa740f" class="text-xs font-medium text-[#D4A574] hover:underline">View All</a>
+                        </div>
+                        
+                        <div class="grid gap-3">
+                            <div class="flex items-center gap-3 p-3 rounded-xl bg-[#FAFAF8] border border-transparent hover:border-[#E8DCC4] transition-colors">
+                                <input type="checkbox" class="task-checkbox">
+                                <span class="text-sm flex-1 leading-tight">Finalize Quarterly Budget Report</span>
+                                <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#E8A76D]/10 text-[#E8A76D] font-bold uppercase">High</span>
+                            </div>
+                            <div class="flex items-center gap-3 p-3 rounded-xl bg-[#FAFAF8] border border-transparent hover:border-[#E8DCC4] transition-colors">
+                                <input type="checkbox" class="task-checkbox">
+                                <span class="text-sm flex-1 leading-tight">Mentorship session</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Goal Card 2 -->
+                <div class="goal-card flex flex-col bg-white border border-[#F0EDE7] p-6 sm:p-8 rounded-[2rem] transition-all">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="flex flex-col gap-1">
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-[#E8A76D]">Creativity</span>
+                            <h2 class="text-xl md:text-2xl font-medium leading-tight">Design Excellence Portfolio</h2>
+                        </div>
+                        <div class="flex flex-col items-end min-w-[60px]">
+                            <span class="text-2xl md:text-3xl font-medium serif">42%</span>
+                            <span class="text-[10px] text-[#8B8680] whitespace-nowrap">5/12 Tasks</span>
+                        </div>
+                    </div>
+                    
+                    <div class="w-full h-2 bg-[#F0EDE7] rounded-full overflow-hidden mb-8">
+                        <div class="h-full bg-[#E8A76D] transition-all duration-1000" style="width: 42%"></div>
+                    </div>
+
+                    <div class="space-y-4 mt-auto">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-[10px] font-bold uppercase tracking-widest text-[#8B8680]">Active Tasks</h3>
+                            <a id="view-all-design" href="https://p.superdesign.dev/draft/7049459f-330e-4208-90bc-ab6bd1fa740f" class="text-xs font-medium text-[#D4A574] hover:underline">View All</a>
+                        </div>
+                        
+                        <div class="grid gap-3">
+                            <div class="flex items-center gap-3 p-3 rounded-xl bg-[#FAFAF8] border border-transparent hover:border-[#E8DCC4] transition-colors">
+                                <input type="checkbox" class="task-checkbox">
+                                <span class="text-sm flex-1 leading-tight">Review design feedback</span>
+                                <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#8B8680]/10 text-[#8B8680] font-bold uppercase">Mid</span>
+                            </div>
+                            <div class="flex items-center gap-3 p-3 rounded-xl bg-[#FAFAF8] border border-transparent hover:border-[#E8DCC4] transition-colors">
+                                <input type="checkbox" class="task-checkbox">
+                                <span class="text-sm flex-1 leading-tight">Update Case Studies</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Goal Card 3 (Muted/Long term) -->
+                <div class="goal-card flex flex-col bg-[#F0EDE7]/30 border border-dashed border-[#E8DCC4] p-6 sm:p-8 rounded-[2rem] transition-all opacity-80">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="flex flex-col gap-1">
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-[#8B8680]">Wellness</span>
+                            <h2 class="text-xl md:text-2xl font-medium leading-tight">Marathon Readiness</h2>
+                        </div>
+                        <div class="flex flex-col items-end min-w-[60px]">
+                            <span class="text-2xl md:text-3xl font-medium serif">12%</span>
+                            <span class="text-[10px] text-[#8B8680] whitespace-nowrap">2/15 Tasks</span>
+                        </div>
+                    </div>
+                    
+                    <div class="w-full h-2 bg-[#F0EDE7] rounded-full overflow-hidden mb-8">
+                        <div class="h-full bg-[#8B8680] transition-all duration-1000" style="width: 12%"></div>
+                    </div>
+
+                    <div class="mt-auto text-center py-4">
+                        <button id="expand-marathon" class="text-sm text-[#8B8680] font-medium hover:text-[#2A2520] transition-colors tap-target">+ Show active tasks</button>
+                    </div>
+                </div>
+
+            </section>
+
+        </main>
+
+        <!-- Optional Side Panel (Persistent) -->
+        <aside style="view-transition-name: sidebar-info" class="hidden xl:flex w-80 p-12 border-l border-[#F0EDE7] flex-col bg-[#FAFAF8] sticky top-0 h-screen">
+            <div class="text-center mb-12">
+                <div class="serif text-3xl mb-1 italic">Calm is a choice.</div>
+                <div class="text-sm text-[#8B8680] uppercase tracking-widest">Focus on what matters</div>
+            </div>
+
+            <div class="space-y-8">
+                <div>
+                    <h3 class="text-xs font-bold uppercase tracking-widest text-[#8B8680] mb-4">Next Intentions</h3>
+                    <div class="space-y-4">
+                        <div class="flex gap-4">
+                            <div class="text-xs text-[#D4A574] font-bold w-12 pt-1">14:00</div>
+                            <div class="text-sm">Deep Work Session (2h)</div>
+                        </div>
+                        <div class="flex gap-4">
+                            <div class="text-xs text-[#8B8680] font-bold w-12 pt-1">16:30</div>
+                            <div class="text-sm text-[#8B8680]">Weekly Sync</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-[#E8DCC4] p-6 rounded-2xl">
+                    <h3 class="text-xs font-bold uppercase tracking-widest text-[#2A2520] mb-2">Daily Quote</h3>
+                    <p class="serif italic text-lg leading-snug">"Simplicity is the ultimate sophistication."</p>
+                    <p class="text-xs mt-3 text-[#2A2520]/60">— Leonardo da Vinci</p>
+                </div>
+            </div>
+        </aside>
+
+    </div>
+</body>
+</html>

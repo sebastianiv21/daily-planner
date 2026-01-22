@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Planner | Today</title>
+    <meta name="view-transition" content="same-origin">
+    <link rel="prefetch" href="https://p.superdesign.dev/draft/7049459f-330e-4208-90bc-ab6bd1fa740f" as="document">
+    <link rel="prefetch" href="https://p.superdesign.dev/draft/a04d3bdb-3996-4b1c-b380-9e5d7382cb12" as="document">
+    <link rel="prefetch" href="https://p.superdesign.dev/draft/c85ee824-a231-4854-933c-4ec0b1e712c2" as="document">
+    <link rel="prefetch" href="https://p.superdesign.dev/draft/12ea1329-97a9-4781-ae7b-bc67a6a6f6d1" as="document">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Satoshi:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --warm-beige: #E8DCC4;
+            --off-white: #FAFAF8;
+            --light-gray: #F0EDE7;
+            --medium-gray: #8B8680;
+            --charcoal: #2A2520;
+            --golden: #D4A574;
+            --soft-orange: #E8A76D;
+            --muted-green: #A4B494;
+        }
+
+        body {
+            font-family: 'Satoshi', sans-serif;
+            color: var(--charcoal);
+            background-color: var(--off-white);
+        }
+
+        .serif { font-family: 'Playfair Display', serif; }
+
+        .task-checkbox {
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border: 1.5px solid var(--medium-gray);
+            border-radius: 6px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+        .task-checkbox:checked {
+            background-color: var(--muted-green);
+            border-color: var(--muted-green);
+        }
+        .task-checkbox:checked::after {
+            content: '✓';
+            position: absolute;
+            color: white;
+            font-size: 14px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .habit-circle {
+            width: 40px;
+            height: 40px;
+            border: 2px solid var(--golden);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+        .habit-circle.active {
+            background-color: var(--golden);
+            color: white;
+        }
+
+        .task-item:hover .drag-handle { opacity: 1; }
+
+        html { background-color: #FAFAF8; }
+        @view-transition { navigation: auto; }
+        ::view-transition { background-color: #FAFAF8; }
+
+        @keyframes fade-out { from { opacity: 1; } to { opacity: 0; } }
+        @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+
+        #mobile-nav-toggle:checked ~ aside {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen flex bg-[#FAFAF8] relative overflow-x-hidden">
+        
+        <!-- Mobile Toggle Hack -->
+        <input type="checkbox" id="mobile-nav-toggle" class="hidden">
+        <label for="mobile-nav-toggle" class="fixed top-4 left-4 z-[60] md:hidden p-2 bg-white/80 backdrop-blur border border-[#F0EDE7] rounded-lg cursor-pointer shadow-sm">
+            <iconify-icon icon="lucide:menu" class="text-2xl text-[#2A2520]"></iconify-icon>
+        </label>
+
+        <!-- Navigation Sidebar -->
+        <aside class="fixed md:sticky top-0 left-0 z-50 w-64 md:w-20 lg:w-64 border-r border-[#F0EDE7] flex flex-col h-screen bg-[#FAFAF8] transition-transform duration-300 -translate-x-full md:translate-x-0">
+            <div class="p-6 lg:p-8 flex items-center gap-3" style="view-transition-name: app-brand">
+                <div class="w-10 h-10 md:w-8 md:h-8 lg:w-10 lg:h-10 bg-[#D4A574] rounded-full flex items-center justify-center text-white shrink-0">
+                    <iconify-icon icon="lucide:sun" class="text-xl md:text-lg lg:text-xl"></iconify-icon>
+                </div>
+                <span class="text-xl font-bold tracking-tight md:hidden lg:block">Sunsama</span>
+                <label for="mobile-nav-toggle" class="md:hidden ml-auto p-2">
+                    <iconify-icon icon="lucide:x" class="text-2xl"></iconify-icon>
+                </label>
+            </div>
+
+            <nav class="flex-1 px-3 lg:px-4 space-y-2 overflow-y-auto" style="view-transition-name: sidebar-nav">
+                <a id="nav-today-link" href="#" class="flex items-center gap-3 px-4 py-4 md:py-3 rounded-xl bg-[#E8DCC4] text-[#2A2520] font-medium justify-center lg:justify-start">
+                    <iconify-icon icon="lucide:calendar-days" class="text-2xl md:text-xl"></iconify-icon>
+                    <span class="md:hidden lg:block">Today</span>
+                </a>
+                <a id="nav-goals-link" href="https://p.superdesign.dev/draft/a04d3bdb-3996-4b1c-b380-9e5d7382cb12" class="flex items-center gap-3 px-4 py-4 md:py-3 rounded-xl hover:bg-[#F0EDE7] transition-colors justify-center lg:justify-start">
+                    <iconify-icon icon="lucide:target" class="text-2xl md:text-xl text-[#8B8680]"></iconify-icon>
+                    <span class="md:hidden lg:block text-[#2A2520]">Goals</span>
+                </a>
+                <a id="nav-habits-link" href="https://p.superdesign.dev/draft/c85ee824-a231-4854-933c-4ec0b1e712c2" class="flex items-center gap-3 px-4 py-4 md:py-3 rounded-xl hover:bg-[#F0EDE7] transition-colors justify-center lg:justify-start">
+                    <iconify-icon icon="lucide:repeat" class="text-2xl md:text-xl text-[#8B8680]"></iconify-icon>
+                    <span class="md:hidden lg:block text-[#2A2520]">Habits</span>
+                </a>
+                <a id="nav-backlog-link" href="https://p.superdesign.dev/draft/12ea1329-97a9-4781-ae7b-bc67a6a6f6d1" class="flex items-center gap-3 px-4 py-4 md:py-3 rounded-xl hover:bg-[#F0EDE7] transition-colors justify-center lg:justify-start">
+                    <iconify-icon icon="lucide:archive" class="text-2xl md:text-xl text-[#8B8680]"></iconify-icon>
+                    <span class="md:hidden lg:block text-[#2A2520]">Backlog</span>
+                </a>
+            </nav>
+
+            <div class="p-4 lg:p-6 border-t border-[#F0EDE7] space-y-2">
+                <a id="nav-settings-link" href="#" class="flex items-center gap-3 px-4 py-3 md:py-2 rounded-lg hover:bg-[#F0EDE7] text-[#8B8680] text-sm justify-center lg:justify-start">
+                    <iconify-icon icon="lucide:settings" class="text-xl md:text-base"></iconify-icon>
+                    <span class="md:hidden lg:block">Settings</span>
+                </a>
+                <a id="nav-logout-link" href="#" class="flex items-center gap-3 px-4 py-3 md:py-2 rounded-lg hover:bg-red-50 text-red-400 text-sm justify-center lg:justify-start">
+                    <iconify-icon icon="lucide:log-out" class="text-xl md:text-base"></iconify-icon>
+                    <span class="md:hidden lg:block">Sign Out</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Overlay for mobile sidebar -->
+        <label for="mobile-nav-toggle" class="fixed inset-0 bg-black/20 z-40 md:hidden backdrop-blur-sm pointer-events-none opacity-0 transition-opacity peer-checked:opacity-100 peer-checked:pointer-events-auto" id="overlay"></label>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 max-w-4xl mx-auto px-4 sm:px-8 md:px-12 py-12 md:py-16 flex flex-col w-full" style="view-transition-name: main-content">
+            
+            <!-- Header -->
+            <header class="mb-10 md:mb-12 mt-4 md:mt-0">
+                <div class="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-4 mb-4 md:mb-2">
+                    <h1 class="serif text-4xl md:text-5xl font-medium tracking-tight">Today</h1>
+                    <span class="text-[#8B8680] text-base md:text-lg">Thursday, May 23rd</span>
+                </div>
+                
+                <!-- Progress Summary Metrics -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8 mt-6">
+                    <div class="flex flex-col">
+                        <span class="text-[10px] md:text-xs uppercase tracking-widest text-[#8B8680] font-bold mb-2 md:mb-1">Daily Tasks</span>
+                        <div class="flex items-center gap-3 md:gap-2">
+                            <span class="text-xl font-medium shrink-0">3 of 8</span>
+                            <div class="flex-1 sm:w-32 h-2 bg-[#F0EDE7] rounded-full overflow-hidden">
+                                <div class="h-full bg-[#A4B494]" style="width: 37.5%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-[10px] md:text-xs uppercase tracking-widest text-[#8B8680] font-bold mb-2 md:mb-1">Habit Rituals</span>
+                        <div class="flex items-center gap-3 md:gap-2">
+                            <span class="text-xl font-medium shrink-0">2 of 3</span>
+                            <div class="flex-1 sm:w-32 h-2 bg-[#F0EDE7] rounded-full overflow-hidden">
+                                <div class="h-full bg-[#E8A76D]" style="width: 66%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Task List Section -->
+            <section class="mb-12 md:mb-16 flex-1">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-xs md:text-sm font-bold uppercase tracking-[0.2em] text-[#8B8680]">Focus Tasks</h2>
+                    <button id="sort-priority-btn" class="text-[#D4A574] text-xs md:text-sm font-medium hover:underline">Sort by Priority</button>
+                </div>
+
+                <div class="space-y-2 md:space-y-1">
+                    <!-- High Priority Task -->
+                    <a id="task-item-1" href="https://p.superdesign.dev/draft/7049459f-330e-4208-90bc-ab6bd1fa740f" class="task-item group flex items-start sm:items-center gap-3 md:gap-4 p-4 rounded-2xl hover:bg-[#F0EDE7] transition-all cursor-pointer border border-[#F0EDE7]/50 sm:border-transparent hover:border-[#E8DCC4] block">
+                        <input type="checkbox" class="task-checkbox mt-1 sm:mt-0 shrink-0" onclick="event.stopPropagation()">
+                        <div class="flex-1 flex items-start justify-between">
+                            <div class="flex flex-col">
+                                <span class="text-base md:text-lg leading-tight">Finalize Quarterly Budget Report</span>
+                                <span class="text-[10px] md:text-xs text-[#D4A574] font-medium mt-1">Priority 1 • Goal: Career Growth</span>
+                            </div>
+                            <iconify-icon icon="lucide:grip-vertical" class="drag-handle opacity-0 text-[#8B8680] transition-opacity hidden sm:block"></iconify-icon>
+                        </div>
+                    </a>
+
+                    <!-- Medium Priority Task -->
+                    <a id="task-item-2" href="https://p.superdesign.dev/draft/7049459f-330e-4208-90bc-ab6bd1fa740f" class="task-item group flex items-start sm:items-center gap-3 md:gap-4 p-4 rounded-2xl hover:bg-[#F0EDE7] transition-all cursor-pointer border border-[#F0EDE7]/50 sm:border-transparent hover:border-[#E8DCC4] block">
+                        <input type="checkbox" class="task-checkbox mt-1 sm:mt-0 shrink-0" onclick="event.stopPropagation()">
+                        <div class="flex-1 flex items-start justify-between">
+                            <div class="flex flex-col">
+                                <span class="text-base md:text-lg leading-tight">Draft follow-up email to stakeholders</span>
+                                <span class="text-[10px] md:text-xs text-[#8B8680] font-medium mt-1">Priority 2</span>
+                            </div>
+                            <iconify-icon icon="lucide:grip-vertical" class="drag-handle opacity-0 text-[#8B8680] transition-opacity hidden sm:block"></iconify-icon>
+                        </div>
+                    </a>
+
+                    <!-- Completed Task -->
+                    <a id="task-item-3" href="https://p.superdesign.dev/draft/7049459f-330e-4208-90bc-ab6bd1fa740f" class="task-item group flex items-start sm:items-center gap-3 md:gap-4 p-4 rounded-2xl opacity-60 transition-all cursor-pointer block border border-[#F0EDE7]/50 sm:border-transparent">
+                        <input type="checkbox" class="task-checkbox mt-1 sm:mt-0 shrink-0" checked onclick="event.stopPropagation()">
+                        <div class="flex-1 flex flex-col">
+                            <span class="text-base md:text-lg leading-tight line-through text-[#8B8680]">Daily morning sync with team</span>
+                            <span class="text-[10px] md:text-xs text-[#8B8680] font-medium mt-1">Done at 9:30 AM</span>
+                        </div>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Habits Section -->
+            <section class="mb-24 md:mb-20">
+                <h2 class="text-xs md:text-sm font-bold uppercase tracking-[0.2em] text-[#8B8680] mb-6">Today's Rituals</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="bg-[#E8DCC4]/30 border border-[#E8DCC4] p-5 rounded-2xl flex items-center justify-between min-h-[80px]">
+                        <div class="flex flex-col">
+                            <span class="font-medium">Morning Meditation</span>
+                            <span class="text-xs text-[#8B8680]">10 Minutes</span>
+                        </div>
+                        <div class="habit-circle active shrink-0">
+                            <iconify-icon icon="lucide:check" class="text-xl"></iconify-icon>
+                        </div>
+                    </div>
+                    <div class="bg-[#E8DCC4]/30 border border-[#E8DCC4] p-5 rounded-2xl flex items-center justify-between min-h-[80px]">
+                        <div class="flex flex-col">
+                            <span class="font-medium">Deep Hydration</span>
+                            <span class="text-xs text-[#8B8680]">2L Target</span>
+                        </div>
+                        <div class="habit-circle active shrink-0">
+                            <iconify-icon icon="lucide:check" class="text-xl"></iconify-icon>
+                        </div>
+                    </div>
+                    <div class="bg-white border border-[#F0EDE7] p-5 rounded-2xl flex items-center justify-between hover:border-[#D4A574] transition-colors min-h-[80px]">
+                        <div class="flex flex-col">
+                            <span class="font-medium text-[#8B8680]">Evening Reading</span>
+                            <span class="text-xs text-[#8B8680]">20 Minutes</span>
+                        </div>
+                        <div class="habit-circle shrink-0"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quick Add Floating Bar -->
+            <div class="fixed sm:sticky bottom-4 left-0 right-0 sm:bottom-8 px-4 sm:px-0 z-40">
+                <div class="max-w-2xl mx-auto">
+                    <div class="relative flex items-center shadow-2xl shadow-[#2A2520]/20 rounded-2xl overflow-hidden">
+                        <div class="absolute left-4 text-[#D4A574] text-xl">
+                            <iconify-icon icon="lucide:plus"></iconify-icon>
+                        </div>
+                        <input id="quick-add-input" type="text" placeholder="Add a task..." class="w-full pl-12 pr-28 py-4 md:py-5 bg-white border-2 border-transparent focus:border-[#D4A574] outline-none text-base md:text-lg transition-all placeholder:text-[#8B8680]/50">
+                        <div class="absolute right-4 flex items-center gap-1 md:gap-2">
+                            <button id="set-priority-btn" title="Set Priority" class="p-2 hover:bg-[#F0EDE7] rounded-lg text-[#8B8680] transition-colors">
+                                <iconify-icon icon="lucide:flag" class="text-lg md:text-xl"></iconify-icon>
+                            </button>
+                            <button id="link-goal-btn" title="Link to Goal" class="p-2 hover:bg-[#F0EDE7] rounded-lg text-[#8B8680] transition-colors">
+                                <iconify-icon icon="lucide:layers" class="text-lg md:text-xl"></iconify-icon>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- Optional Side Panel (Hidden on mobile/tablet) -->
+        <aside class="hidden xl:flex w-80 p-12 border-l border-[#F0EDE7] flex-col h-screen sticky top-0">
+            <div class="text-center mb-12">
+                <div class="serif text-3xl mb-1 italic">Calm is a choice.</div>
+                <div class="text-sm text-[#8B8680] uppercase tracking-widest">Focus on what matters</div>
+            </div>
+
+            <div class="space-y-8">
+                <div>
+                    <h3 class="text-xs font-bold uppercase tracking-widest text-[#8B8680] mb-4">Next Intentions</h3>
+                    <div class="space-y-4">
+                        <div class="flex gap-4">
+                            <div class="text-xs text-[#D4A574] font-bold w-12 pt-1">14:00</div>
+                            <div class="text-sm">Deep Work Session (2h)</div>
+                        </div>
+                        <div class="flex gap-4">
+                            <div class="text-xs text-[#8B8680] font-bold w-12 pt-1">16:30</div>
+                            <div class="text-sm text-[#8B8680]">Weekly Sync</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-[#E8DCC4] p-6 rounded-2xl">
+                    <h3 class="text-xs font-bold uppercase tracking-widest text-[#2A2520] mb-2">Daily Quote</h3>
+                    <p class="serif italic text-lg leading-snug">"Simplicity is the ultimate sophistication."</p>
+                    <p class="text-xs mt-3 text-[#2A2520]/60">— Leonardo da Vinci</p>
+                </div>
+            </div>
+        </aside>
+
+    </div>
+
+    <script>
+        // Simplified mobile menu handling
+        const checkbox = document.getElementById('mobile-nav-toggle');
+        const overlay = document.getElementById('overlay');
+        
+        // Auto-close menu on resize if screen becomes larger
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 768 && checkbox.checked) {
+                checkbox.checked = false;
+            }
+        });
+
+        // Close sidebar when clicking links on mobile
+        document.querySelectorAll('aside a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth < 768) {
+                    checkbox.checked = false;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -16,33 +16,33 @@ The application is built with **SvelteKit**, **DaisyUI**, **PostgreSQL**, **Driz
 
 ### Primary Goals
 
-* Enable intentional **daily planning** as a core habit
-* Reduce cognitive overload compared to traditional task managers
-* Provide seamless cross-device access with secure authentication
+- Enable intentional **daily planning** as a core habit
+- Reduce cognitive overload compared to traditional task managers
+- Provide seamless cross-device access with secure authentication
 
 ### Success Metrics
 
-* User can fully plan their day in under 2 minutes
-* Tasks, habits, and goals sync correctly across devices
-* Daily completion rate is clearly visible and understandable
+- User can fully plan their day in under 2 minutes
+- Tasks, habits, and goals sync correctly across devices
+- Daily completion rate is clearly visible and understandable
 
 ---
 
 ## Target User
 
-* Single user (self)
-* Knowledge worker or student
-* Uses multiple devices (laptop + phone)
-* Values simplicity, focus, and routine over advanced automation
+- Single user (self)
+- Knowledge worker or student
+- Uses multiple devices (laptop + phone)
+- Values simplicity, focus, and routine over advanced automation
 
 ---
 
 ## Key Principles
 
-* **Daily-first**: The app always opens to Today
-* **Minimalist UI**: No clutter, no unnecessary features
-* **Intentionality**: User actively chooses what to work on today
-* **Local-feeling**: Fast, responsive, calm
+- **Daily-first**: The app always opens to Today
+- **Minimalist UI**: No clutter, no unnecessary features
+- **Intentionality**: User actively chooses what to work on today
+- **Local-feeling**: Fast, responsive, calm
 
 ---
 
@@ -50,10 +50,10 @@ The application is built with **SvelteKit**, **DaisyUI**, **PostgreSQL**, **Driz
 
 ### 1. Authentication (Must Have)
 
-* Email + password authentication
-* Secure session-based auth using Better Auth
-* HTTP-only cookies
-* No social login for MVP
+- Email + password authentication
+- Secure session-based auth using Better Auth
+- HTTP-only cookies
+- No social login for MVP
 
 ---
 
@@ -64,10 +64,10 @@ The Today view is the heart of the application and the default landing page afte
 
 **Includes**:
 
-* Tasks scheduled for today
-* Habits due today
-* Quick-add input for new tasks
-* Simple visual summary of daily progress
+- Tasks scheduled for today
+- Habits due today
+- Quick-add input for new tasks
+- Simple visual summary of daily progress
 
 ---
 
@@ -75,26 +75,26 @@ The Today view is the heart of the application and the default landing page afte
 
 **Capabilities**:
 
-* Create, edit, complete, and delete tasks
-* Assign tasks to a date (default: today)
-* Optional association with a goal
+- Create, edit, complete, and delete tasks
+- Assign tasks to a date (default: today)
+- Optional association with a goal
 
 **Task Priority**:
 
-* Simple numeric priority:
+- Simple numeric priority:
+  - 1 = High
+  - 2 = Medium (default)
+  - 3 = Low
 
-  * 1 = High
-  * 2 = Medium (default)
-  * 3 = Low
-* Tasks are sorted by priority within the day
+- Tasks are sorted by priority within the day
 
 ---
 
 ### 4. Task Rollover (Should Have)
 
-* Incomplete tasks automatically roll over to the next day
-* Rollover happens silently on first app load of a new day
-* No notifications or prompts
+- Incomplete tasks automatically roll over to the next day
+- Rollover happens silently on first app load of a new day
+- No notifications or prompts
 
 ---
 
@@ -102,12 +102,12 @@ The Today view is the heart of the application and the default landing page afte
 
 **Capabilities**:
 
-* Define habits with a frequency:
+- Define habits with a frequency:
+  - Daily
+  - Specific weekdays
 
-  * Daily
-  * Specific weekdays
-* Mark habit completion per day
-* Track completion history
+- Mark habit completion per day
+- Track completion history
 
 ---
 
@@ -115,14 +115,14 @@ The Today view is the heart of the application and the default landing page afte
 
 **Purpose**:
 
-* Represent long-term intentions
-* Provide context for tasks and habits
+- Represent long-term intentions
+- Provide context for tasks and habits
 
 **Capabilities**:
 
-* Create and edit goals
-* Link tasks and habits to a goal
-* View goal-related items together
+- Create and edit goals
+- Link tasks and habits to a goal
+- View goal-related items together
 
 ---
 
@@ -130,22 +130,22 @@ The Today view is the heart of the application and the default landing page afte
 
 ### Should Have
 
-* Daily completion summary
-* Habit streak indicators
-* Mobile-responsive layout
+- Daily completion summary
+- Habit streak indicators
+- Mobile-responsive layout
 
 ### Could Have
 
-* Light/Dark theme toggle
-* Weekly review view
-* Keyboard-first quick add
+- Light/Dark theme toggle
+- Weekly review view
+- Keyboard-first quick add
 
 ### Won’t Have (MVP)
 
-* Team collaboration
-* Notifications or reminders
-* Calendar integrations
-* AI planning or suggestions
+- Team collaboration
+- Notifications or reminders
+- Calendar integrations
+- AI planning or suggestions
 
 ---
 
@@ -161,32 +161,32 @@ The Today view is the heart of the application and the default landing page afte
 
 ## Non-Functional Requirements
 
-* Fast page load (< 1s on typical connection)
-* Works reliably across devices
-* Secure handling of credentials
-* Data integrity across sessions
+- Fast page load (< 1s on typical connection)
+- Works reliably across devices
+- Secure handling of credentials
+- Data integrity across sessions
 
 ---
 
 ## Out of Scope
 
-* Native mobile apps
-* Offline-first support
-* External integrations
+- Native mobile apps
+- Offline-first support
+- External integrations
 
 ---
 
 ## Future Considerations
 
-* Magic link authentication
-* Calendar integrations
-* Data export
-* Progressive Web App (PWA)
+- Magic link authentication
+- Calendar integrations
+- Data export
+- Progressive Web App (PWA)
 
 ---
 
 ## Reference Products
 
-* **Sunsama** – Daily intentional planning
-* **Todoist** – Simple task prioritization
-* **Loop Habit Tracker** – Habit completion model
+- **Sunsama** – Daily intentional planning
+- **Todoist** – Simple task prioritization
+- **Loop Habit Tracker** – Habit completion model

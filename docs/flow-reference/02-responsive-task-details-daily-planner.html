@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Planner | Task Details</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Satoshi:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <meta name="view-transition" content="same-origin">
+    
+    <style>
+        :root {
+            --warm-beige: #E8DCC4;
+            --off-white: #FAFAF8;
+            --light-gray: #F0EDE7;
+            --medium-gray: #8B8680;
+            --charcoal: #2A2520;
+            --golden: #D4A574;
+            --soft-orange: #E8A76D;
+            --muted-green: #A4B494;
+        }
+
+        body {
+            font-family: 'Satoshi', sans-serif;
+            color: var(--charcoal);
+            background-color: var(--off-white);
+        }
+
+        .serif {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Custom Checkbox */
+        .task-checkbox {
+            appearance: none;
+            width: 28px;
+            height: 28px;
+            border: 2px solid var(--medium-gray);
+            border-radius: 8px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+        .task-checkbox:checked {
+            background-color: var(--muted-green);
+            border-color: var(--muted-green);
+        }
+        .task-checkbox:checked::after {
+            content: '✓';
+            position: absolute;
+            color: white;
+            font-size: 16px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* View Transition Setup */
+        @view-transition {
+            navigation: auto;
+        }
+
+        /* Custom Priority Pills */
+        .priority-btn.active {
+            background-color: var(--charcoal);
+            color: white;
+            border-color: var(--charcoal);
+        }
+
+        /* Mobile Sidebar Animation */
+        #mobile-nav {
+            transition: transform 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen flex flex-col lg:flex-row bg-[#FAFAF8]">
+        
+        <!-- Mobile Top Bar -->
+        <header class="lg:hidden bg-[#FAFAF8] border-b border-[#F0EDE7] px-4 py-4 flex items-center justify-between sticky top-0 z-40">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-[#D4A574] rounded-full flex items-center justify-center text-white">
+                    <iconify-icon icon="lucide:sun" class="text-xl"></iconify-icon>
+                </div>
+                <span class="text-lg font-bold tracking-tight">Sunsama</span>
+            </div>
+            <button onclick="toggleMenu()" class="p-2 -mr-2 text-[#2A2520] h-11 w-11 flex items-center justify-center">
+                <iconify-icon icon="lucide:menu" class="text-2xl"></iconify-icon>
+            </button>
+        </header>
+
+        <!-- Navigation Overlay -->
+        <div id="nav-overlay" onclick="toggleMenu()" class="fixed inset-0 bg-black/20 z-50 hidden lg:hidden backdrop-blur-sm"></div>
+
+        <!-- Navigation Sidebar (PERSISTENT) -->
+        <aside id="mobile-nav" style="view-transition-name: main-nav" class="fixed inset-y-0 left-0 z-[60] w-64 border-r border-[#F0EDE7] flex flex-col h-screen bg-[#FAFAF8] -translate-x-full lg:translate-x-0 lg:sticky lg:top-0 transition-transform duration-300">
+            <div style="view-transition-name: brand" class="p-8 flex items-center gap-3">
+                <div class="w-8 h-8 bg-[#D4A574] rounded-full flex items-center justify-center text-white">
+                    <iconify-icon icon="lucide:sun" class="text-xl"></iconify-icon>
+                </div>
+                <span class="text-xl font-bold tracking-tight">Sunsama</span>
+            </div>
+
+            <nav class="flex-1 px-4 space-y-2">
+                <a id="nav-today" href="https://p.superdesign.dev/draft/52a3609b-c843-4858-80d3-097424e1377e" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-[#F0EDE7] transition-colors text-[#8B8680] h-12">
+                    <iconify-icon icon="lucide:calendar-days" class="text-xl"></iconify-icon>
+                    <span>Today</span>
+                </a>
+                <a id="nav-goals" href="https://p.superdesign.dev/draft/a04d3bdb-3996-4b1c-b380-9e5d7382cb12" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-[#F0EDE7] transition-colors text-[#8B8680] h-12">
+                    <iconify-icon icon="lucide:target" class="text-xl"></iconify-icon>
+                    <span>Goals</span>
+                </a>
+                <a id="nav-habits" href="https://p.superdesign.dev/draft/c85ee824-a231-4854-933c-4ec0b1e712c2" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-[#F0EDE7] transition-colors text-[#8B8680] h-12">
+                    <iconify-icon icon="lucide:repeat" class="text-xl"></iconify-icon>
+                    <span>Habits</span>
+                </a>
+                <a id="nav-archive" href="https://p.superdesign.dev/draft/12ea1329-97a9-4781-ae7b-bc67a6a6f6d1" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-[#F0EDE7] transition-colors text-[#8B8680] h-12">
+                    <iconify-icon icon="lucide:archive" class="text-xl"></iconify-icon>
+                    <span>Archive</span>
+                </a>
+            </nav>
+
+            <div class="p-6 border-t border-[#F0EDE7] space-y-2">
+                <a id="nav-settings" href="#settings" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-[#F0EDE7] text-[#8B8680] text-sm h-11">
+                    <iconify-icon icon="lucide:settings"></iconify-icon>
+                    <span>Settings</span>
+                </a>
+                <a id="nav-logout" href="#logout" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-red-50 text-red-400 text-sm h-11">
+                    <iconify-icon icon="lucide:log-out"></iconify-icon>
+                    <span>Sign Out</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content Area (DYNAMIC) -->
+        <main style="view-transition-name: main-content" class="flex-1 w-full max-w-4xl mx-auto px-4 sm:px-8 py-8 sm:py-16 flex flex-col">
+            
+            <!-- Navigation Back -->
+            <nav class="mb-6 sm:mb-8">
+                <a id="btn-back-to-today" href="https://p.superdesign.dev/draft/52a3609b-c843-4858-80d3-097424e1377e" class="inline-flex items-center gap-2 text-[#8B8680] hover:text-[#2A2520] transition-colors font-medium group min-h-[44px]">
+                    <iconify-icon icon="lucide:arrow-left" class="text-lg transition-transform group-hover:-translate-x-1"></iconify-icon>
+                    <span>Return to Today</span>
+                </a>
+            </nav>
+
+            <!-- Task Title Section -->
+            <div class="flex items-start gap-4 sm:gap-6 mb-8 sm:mb-12">
+                <input type="checkbox" class="task-checkbox mt-2 sm:mt-4">
+                <div class="flex-1">
+                    <textarea rows="2" class="serif text-3xl sm:text-5xl font-medium tracking-tight bg-transparent border-none outline-none w-full focus:ring-0 placeholder:text-[#8B8680]/30 resize-none h-auto overflow-hidden" oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'">Finalize Quarterly Budget Report</textarea>
+                    <p class="text-[#8B8680] mt-2 text-sm sm:text-base">Part of your 2024 Q2 Performance Goal</p>
+                </div>
+            </div>
+
+            <!-- Task Configuration Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 mb-12 sm:mb-16">
+                
+                <!-- Left Column: Details -->
+                <div class="space-y-8 sm:space-y-10">
+                    
+                    <!-- Priority -->
+                    <section>
+                        <h3 class="text-xs font-bold uppercase tracking-[0.2em] text-[#8B8680] mb-4">Priority</h3>
+                        <div class="flex gap-2 sm:gap-3">
+                            <button class="priority-btn active flex-1 min-h-[44px] sm:py-3 px-4 border border-[#F0EDE7] rounded-xl text-xs sm:text-sm font-bold transition-all hover:border-[#D4A574]">1 — HIGH</button>
+                            <button class="priority-btn flex-1 min-h-[44px] sm:py-3 px-4 border border-[#F0EDE7] rounded-xl text-xs sm:text-sm font-bold text-[#8B8680] transition-all hover:border-[#D4A574]">2 — MEDIUM</button>
+                            <button class="priority-btn flex-1 min-h-[44px] sm:py-3 px-4 border border-[#F0EDE7] rounded-xl text-xs sm:text-sm font-bold text-[#8B8680] transition-all hover:border-[#D4A574]">3 — LOW</button>
+                        </div>
+                    </section>
+
+                    <!-- Goal Association -->
+                    <section>
+                        <h3 class="text-xs font-bold uppercase tracking-[0.2em] text-[#8B8680] mb-4">Goal</h3>
+                        <button id="btn-goal-select" class="w-full flex items-center justify-between p-4 bg-white border border-[#E8DCC4] rounded-2xl group hover:border-[#D4A574] transition-all min-h-[64px]">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-[#E8DCC4]/30 rounded-full flex items-center justify-center text-[#D4A574]">
+                                    <iconify-icon icon="lucide:layers" class="text-xl"></iconify-icon>
+                                </div>
+                                <span class="font-medium">Career Growth</span>
+                            </div>
+                            <iconify-icon icon="lucide:chevron-right" class="text-[#8B8680]"></iconify-icon>
+                        </button>
+                    </section>
+
+                    <!-- Due Date -->
+                    <section>
+                        <h3 class="text-xs font-bold uppercase tracking-[0.2em] text-[#8B8680] mb-4">Date</h3>
+                        <div class="flex items-center gap-3 p-4 bg-[#F0EDE7]/50 border border-transparent rounded-2xl min-h-[64px]">
+                            <iconify-icon icon="lucide:calendar" class="text-xl text-[#D4A574]"></iconify-icon>
+                            <span class="font-medium">Today — Thursday, May 23rd</span>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Right Column: Notes/Subtasks -->
+                <div class="space-y-8 sm:space-y-10">
+                    
+                    <!-- Notes Section -->
+                    <section>
+                        <h3 class="text-xs font-bold uppercase tracking-[0.2em] text-[#8B8680] mb-4">Notes</h3>
+                        <textarea placeholder="Click to add notes, links, or context..." class="w-full h-48 p-6 bg-white border border-[#F0EDE7] rounded-2xl outline-none focus:border-[#D4A574] transition-all resize-none leading-relaxed text-sm sm:text-base">• Review last week's expenses
+• Check for missing receipts from the marketing team
+• Re-allocate surplus from the travel budget to product development
+
+Internal reference: PRJ-2024-05</textarea>
+                    </section>
+
+                    <!-- Action Area -->
+                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-4 sm:pt-6">
+                        <button id="btn-delete-task" class="flex flex-1 items-center justify-center gap-2 px-6 py-4 sm:py-3 text-red-400 border border-red-100 rounded-xl hover:bg-red-50 transition-colors font-medium min-h-[48px]">
+                            <iconify-icon icon="lucide:trash-2"></iconify-icon>
+                            <span>Delete Task</span>
+                        </button>
+                        <button id="btn-archive-task" class="flex flex-1 items-center justify-center gap-2 px-6 py-4 sm:py-3 text-[#8B8680] border border-[#F0EDE7] rounded-xl hover:bg-[#F0EDE7] transition-colors font-medium min-h-[48px]">
+                            <iconify-icon icon="lucide:archive"></iconify-icon>
+                            <span>Move to Backlog</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- Right Side Panel (PERSISTENT - Hidden on smaller desktops) -->
+        <aside style="view-transition-name: right-sidebar" class="hidden xl:flex w-80 p-12 border-l border-[#F0EDE7] flex-col z-50">
+            <div class="text-center mb-12">
+                <div class="serif text-3xl mb-1 italic">Calm is a choice.</div>
+                <div class="text-sm text-[#8B8680] uppercase tracking-widest">Focus on what matters</div>
+            </div>
+
+            <div class="space-y-8">
+                <div>
+                    <h3 class="text-xs font-bold uppercase tracking-widest text-[#8B8680] mb-4">Next Intentions</h3>
+                    <div class="space-y-4">
+                        <div class="flex gap-4">
+                            <div class="text-xs text-[#D4A574] font-bold w-12 pt-1">14:00</div>
+                            <div class="text-sm">Deep Work Session (2h)</div>
+                        </div>
+                        <div class="flex gap-4">
+                            <div class="text-xs text-[#8B8680] font-bold w-12 pt-1">16:30</div>
+                            <div class="text-sm text-[#8B8680]">Weekly Sync</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-[#E8DCC4] p-6 rounded-2xl">
+                    <h3 class="text-xs font-bold uppercase tracking-widest text-[#2A2520] mb-2">Daily Quote</h3>
+                    <p class="serif italic text-lg leading-snug">"Simplicity is the ultimate sophistication."</p>
+                    <p class="text-xs mt-3 text-[#2A2520]/60">— Leonardo da Vinci</p>
+                </div>
+            </div>
+        </aside>
+
+    </div>
+
+    <script>
+        function toggleMenu() {
+            const nav = document.getElementById('mobile-nav');
+            const overlay = document.getElementById('nav-overlay');
+            const isHidden = nav.classList.contains('-translate-x-full');
+            
+            if (isHidden) {
+                nav.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+            } else {
+                nav.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            }
+        }
+
+        // Auto-expand title textarea on load
+        window.addEventListener('DOMContentLoaded', () => {
+            const textarea = document.querySelector('textarea.serif');
+            textarea.style.height = 'auto';
+            textarea.style.height = textarea.scrollHeight + 'px';
+        });
+    </script>
+</body>
+</html>
